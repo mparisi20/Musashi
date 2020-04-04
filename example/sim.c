@@ -21,8 +21,8 @@ void disassemble_program();
 #define OUTPUT_DEVICE_PERIOD 1
 
 /* ROM and RAM sizes */
-#define MAX_ROM 0xfff
-#define MAX_RAM 0xff
+#define MAX_ROM 0x00ffffff
+#define MAX_RAM 0x00ffffff
 
 
 /* Read/write macros */
@@ -482,7 +482,7 @@ void disassemble_program()
 
 	pc = cpu_read_long_dasm(4);
 
-	while(pc <= 0x16e)
+	while(1)
 	{
 		instr_size = m68k_disassemble(buff, pc, M68K_CPU_TYPE_68000);
 		make_hex(buff2, pc, instr_size);
@@ -517,6 +517,8 @@ int main(int argc, char* argv[])
 {
 	FILE* fhandle;
 
+	printf("%x %x\n", MAX_ROM, MAX_RAM);
+	
 	if(argc != 2)
 	{
 		printf("Usage: sim <program file>\n");
@@ -529,7 +531,7 @@ int main(int argc, char* argv[])
 	if(fread(g_rom, 1, MAX_ROM+1, fhandle) <= 0)
 		exit_error("Error reading %s", argv[1]);
 
-//	disassemble_program();
+	disassemble_program();
 
 	m68k_init();
 	m68k_set_cpu_type(M68K_CPU_TYPE_68000);
